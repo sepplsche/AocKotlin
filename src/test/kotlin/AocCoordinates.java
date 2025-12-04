@@ -1,5 +1,6 @@
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -21,6 +22,23 @@ public class AocCoordinates {
 
         public Point neg() {
             return new Point(-x, -y);
+        }
+
+        public boolean isNachbar(Point p) {
+            return (x == p.x - 1 && y == p.y)
+                    || (x == p.x + 1 && y == p.y)
+                    || (y == p.y - 1 && x == p.x)
+                    || (y == p.y + 1 && x == p.x)
+                    || (x == p.x + 1 && y == p.y + 1)
+                    || (x == p.x - 1 && y == p.y - 1)
+                    || (x == p.x + 1 && y == p.y - 1)
+                    || (x == p.x - 1 && y == p.y + 1);
+        }
+
+        public Set<Point> nachbars(Set<Point> points) {
+            return points.stream()
+                    .filter(this::isNachbar)
+                    .collect(Collectors.toSet());
         }
 
         @Override
