@@ -19,16 +19,26 @@ class Aoc2025Day07Test {
                     splitters.add(Point.of(l, c))
             }
         }
+        println(splitters)
 
-        (0..<lines.size).forEach { l ->
+        var beams = setOf(Point.of(1, start))
+        println(beams)
 
-            splitters
-                .filter { it.x == l }
-                .filter { it.y == start }
+        (2..<lines.size).forEach { line ->
+            val newBeams = splitters.filter { it.x == line }
+                .filter { beams.contains(Point.of(it.x - 1, it.y)) }
+                .flatMap {
+                    listOf(Point.of(it.x, it.y - 1), Point.of(it.x, it.y + 1))
+                }.toSet()
 
+            if (newBeams.isEmpty()) {
+                beams = beams.map { Point.of(it.x + 1, it.y) }.toSet()
+            } else {
+                beams = newBeams
+            }
 
+            println(beams)
         }
-
 
         val result = 0
 
