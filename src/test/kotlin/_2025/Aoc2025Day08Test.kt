@@ -15,27 +15,22 @@ class Aoc2025Day08Test {
         val positions = lines.map { line ->
             Point.of(line.split(",").map { it.toInt() })
         }
-        (0..<positions.size).flatMap { i ->
+        val sortedDists = (0..<positions.size).flatMap { i ->
             (i + 1..<positions.size).map { j ->
                 val dist = positions[i].dist(positions[j])
                 Dist(positions[i], positions[j], dist)
             }
         }
             .sortedBy { it.dist }
-            .forEach { dist ->
-                boxes.forEach { box ->
-                    if (box.contains(dist.p1)) {
-                        box.add(dist.p1)
-                    } else if (box.contains(dist.p2)) {
-                        box.add(dist.p2)
-                    } else {
-                        boxes.add(Box.of(dist.p1, dist.p2))
-                    }
-                }
-            }
 
-        val sortedBoxes = boxes.map { it.points.size }.sorted()
-        val result = sortedBoxes[0] * sortedBoxes[1] * sortedBoxes[2]
+        sortedDists.forEach { dist ->
+            boxes.firstOrNull { box -> box.contains(dist.p1) }?.add(dist.p2)
+                ?: boxes.firstOrNull { box -> box.contains(dist.p2) }?.add(dist.p1)
+                ?: boxes.add(Box.of(dist.p1, dist.p2))
+        }
+
+        val sortedBoxes = boxes.map { it.points.size }.sortedDescending()
+        val result = sortedBoxes[0].toLong() * sortedBoxes[1].toLong() * sortedBoxes[2].toLong()
         println("Result = $result")
     }
 
