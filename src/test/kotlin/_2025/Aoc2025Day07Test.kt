@@ -28,8 +28,6 @@ class Aoc2025Day07Test {
             }
         }
 
-        // beams.forEach { println(it) }
-
         var counter = 0
         (0..<maxY).forEach { y ->
             (0..<maxX).forEach { x ->
@@ -48,7 +46,7 @@ class Aoc2025Day07Test {
 
         val maxY = lines.size
         val maxX = lines[0].length
-        val beams = Array(maxY) { IntArray(maxX) }
+        val beams = Array(maxY) { LongArray(maxX) }
         beams[0][lines[0].indexOf('S')] = 1
 
         (0..<maxY).forEach { y ->
@@ -57,7 +55,7 @@ class Aoc2025Day07Test {
                 if (y > 0 && (beams[y - 1][x] > 0) && lines[y][x] != '^') {
                     beams[y][x] = beams[y - 1][x]
                 } else if (lines[y][x] == '^') {
-                    beams[y][x - 1] += beams[y - 1][x] + beams[y - 1][x - 1]
+                    beams[y][x - 1] += beams[y - 1][x]
                     beams[y][x] = 0
                     beams[y][++x] += beams[y - 1][x - 1] + beams[y - 1][x]
                 } else if (y > 0) {
@@ -67,6 +65,8 @@ class Aoc2025Day07Test {
             }
         }
 
-        beams.forEach { line -> println(line.toList().map { if (it == 0) "  " else it.toString().padStart(2) }) }
+        // beams.forEach { line -> println(line.toList().map { if (it == 0) "  " else it.toString().padStart(2) }) }
+
+        println("Result ${beams[beams.size - 1].sum()}")
     }
 }
