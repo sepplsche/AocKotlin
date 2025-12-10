@@ -1,7 +1,6 @@
 package _2025
 
 import AocUtils
-import kotlin.math.pow
 import kotlin.math.sqrt
 import kotlin.test.Test
 
@@ -11,9 +10,8 @@ class Aoc2025Day08Test {
     fun aoc1() {
         val lines = AocUtils.input(this::class.java)
 
-        val boxes = mutableListOf<Box>()
         val positions = lines.map { line ->
-            Point.of(line.split(",").map { it.toInt() })
+            Point.of(line.split(",").map { it.toLong() })
         }
         val sortedDists = (0..<positions.size).flatMap { i ->
             (i + 1..<positions.size).map { j ->
@@ -23,7 +21,8 @@ class Aoc2025Day08Test {
         }
             .sortedBy { it.dist }
 
-        sortedDists.forEach { dist ->
+        val boxes = mutableListOf<Box>()
+        sortedDists.take(1000).forEach { dist ->
             boxes.firstOrNull { box -> box.contains(dist.p1) }?.add(dist.p2)
                 ?: boxes.firstOrNull { box -> box.contains(dist.p2) }?.add(dist.p1)
                 ?: boxes.add(Box.of(dist.p1, dist.p2))
@@ -63,13 +62,18 @@ data class Box(val points: MutableSet<Point>) {
 
 data class Dist(val p1: Point, val p2: Point, val dist: Double)
 
-data class Point(val x: Int, val y: Int, val z: Int) {
+data class Point(val x: Long, val y: Long, val z: Long) {
     companion object {
-        fun of(ints: List<Int>): Point {
+        fun of(ints: List<Long>): Point {
             return Point(ints[0], ints[1], ints[2])
         }
     }
 
-    fun dist(p: Point) = sqrt((x - p.x).toDouble().pow(2) + (y - p.y).toDouble().pow(2) + (z - p.z).toDouble().pow(2))
+    fun dist(p: Point): Double {
+        val dx = x - p.x
+        val dy = y - p.y
+        val dz = z - p.z
+        return sqrt((dx * dx + dy * dy + dz * dz).toDouble())
+    }
 }
 
